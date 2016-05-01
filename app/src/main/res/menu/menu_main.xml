@@ -7,5 +7,7 @@
           <!--android:orderInCategory="100"-->
           <!--app:showAsAction="never"/>-->
     <item android:id="@+id/top_movies"
-          android:title="Top Movies"/>
+          android:title="@string/top_movies"/>
+    <item android:id="@+id/most_popular"
+          android:title="@string/most_popular"/>
 </menu>

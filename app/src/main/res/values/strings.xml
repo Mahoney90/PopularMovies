@@ -8,4 +8,7 @@
     <string name="synopsis">Synopsis</string>
     <string name="voter_rating">0/10</string>
     <string name="tmdb_api">87f2675010a97023a5429d9a91751a50</string>
+    <string name="top_movies">Top Movies</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="sort_preference_key">Preference Key</string>
 </resources>

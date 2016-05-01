@@ -1,7 +1,7 @@
 package com.mahoneyapps.popularmovies;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,8 +13,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null){
+            MovieFragment movieFragment = new MovieFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(getString(R.string.sort_preference_key), "popular");
+            movieFragment.setArguments(bundle);
             // open a new MovieFragment (most popular)
-            getFragmentManager().beginTransaction().add(R.id.container, new MovieFragment()).commit();
+            getFragmentManager().beginTransaction().add(R.id.container, movieFragment).commit();
         }
     }
 
@@ -32,11 +36,26 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        // if user selects "Top Movies" option from menu, open a TopRatedFragment displaying the top rated movies on TMDB
+        // if user selects "Top Movies" option from menu, open a fragment displaying the top rated movies on TMDB
         if (id == R.id.top_movies){
-            getFragmentManager().beginTransaction().add(R.id.container, new TopRatedFragment()).commit();
+
+            Bundle bundle = new Bundle();
+            bundle.putString(getString(R.string.sort_preference_key), "top_rated");
+            MovieFragment movieFragment = new MovieFragment();
+            movieFragment.setArguments(bundle);
+            getFragmentManager().beginTransaction().add(R.id.container, movieFragment).commit();
+
+        }
+        // if user selects "Most Popular" option from menu, open a fragment displaying the top rated movies on TMDB
+        if (id == R.id.most_popular) {
+            Bundle bundle = new Bundle();
+            bundle.putString(getString(R.string.sort_preference_key), "popular");
+            MovieFragment movieFragment = new MovieFragment();
+            movieFragment.setArguments(bundle);
+            getFragmentManager().beginTransaction().add(R.id.container, movieFragment).commit();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -1,7 +1,10 @@
 package com.mahoneyapps.popularmovies;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,15 +42,30 @@ public class MovieFragment extends Fragment {
     List<Movie> mPopMovies;
     final String INTENT_EXTRA_MOVIE_KEY = "MOVIE";
     private static final String API_KEY = BuildConfig.API_KEY;
+    private String PATH_TO_USE = "popular";
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate our GridView
         View rootView = inflater.inflate(R.layout.grid_layout, container, false);
 
+
+        Bundle bundle = getArguments();
+        PATH_TO_USE = bundle.getString(getString(R.string.sort_preference_key));
+
         // Check that getSupportActionBar doesn't return null, and then change the Activity's Title
-        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Most Popular Movies");
+        if (PATH_TO_USE != null) {
+            if (PATH_TO_USE.equals("top_rated")) {
+                if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+                    ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Highest Rated Movies");
+                }
+            } else {
+                if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Most Popular Movies");
+                }
+            }
         }
 
         // Initialize ArrayList and our GridView
@@ -86,10 +105,15 @@ public class MovieFragment extends Fragment {
         private final String PATH_MOVIE = "movie";
         private final String PATH_POPULAR = "popular";
         private final String PATH_API_KEY = "api_key";
-        private final String MY_API = getString(R.string.tmdb_api);
 
+        private final String TOAST_TEXT_NO_NETWORK = "Please connect to the Internet";
         @Override
         protected List<String> doInBackground(Void... params) {
+
+            if (!checkNetworkAvailability()){
+                Toast.makeText(getActivity(), TOAST_TEXT_NO_NETWORK, Toast.LENGTH_SHORT).show();
+                return null;
+            }
 
             // Declare some variables outside of the try/catch block so we can access them later
             HttpURLConnection urlConnection = null;
@@ -105,7 +129,7 @@ public class MovieFragment extends Fragment {
                         authority(BASE_URL).
                         appendPath(PATH_VERSION).
                         appendPath(PATH_MOVIE).
-                        appendPath(PATH_POPULAR).
+                        appendPath(PATH_TO_USE).
                         appendQueryParameter(PATH_API_KEY, API_KEY);
 
                 String popularUrl = uri.build().toString();
@@ -260,4 +284,15 @@ public class MovieFragment extends Fragment {
             return mMovieList;
         }
     }
+
+    private boolean checkNetworkAvailability() {
+        ConnectivityManager cManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

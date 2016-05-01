@@ -43,8 +43,7 @@ public class MovieFragment extends Fragment {
     final String INTENT_EXTRA_MOVIE_KEY = "MOVIE";
     private static final String API_KEY = BuildConfig.API_KEY;
     private String PATH_TO_USE = "popular";
-
-
+    private final String TOAST_TEXT_NO_NETWORK = "Please connect to the Internet";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,6 +78,11 @@ public class MovieFragment extends Fragment {
         // Initialize ArrayList of Movie objects
         mPopMovies = new ArrayList<>();
 
+        if (!checkNetworkAvailability()){
+            Toast.makeText(getActivity(), TOAST_TEXT_NO_NETWORK, Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
         // Set an Item Click Listener on our GridView, when we click on an item, start an intent,
         // passing the Movie object that was clicked as an Intent Extra to our DetailActivity class
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -106,14 +110,8 @@ public class MovieFragment extends Fragment {
         private final String PATH_POPULAR = "popular";
         private final String PATH_API_KEY = "api_key";
 
-        private final String TOAST_TEXT_NO_NETWORK = "Please connect to the Internet";
         @Override
         protected List<String> doInBackground(Void... params) {
-
-            if (!checkNetworkAvailability()){
-                Toast.makeText(getActivity(), TOAST_TEXT_NO_NETWORK, Toast.LENGTH_SHORT).show();
-                return null;
-            }
 
             // Declare some variables outside of the try/catch block so we can access them later
             HttpURLConnection urlConnection = null;

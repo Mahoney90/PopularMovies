@@ -17,8 +17,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<String> mAuthors;
     private List<String> mReviews;
 
-    public class EmptyViewHolder extends RecyclerView.ViewHolder{
-        public EmptyViewHolder(View itemView){
+    public class EmptyViewHolder extends RecyclerView.ViewHolder {
+        public EmptyViewHolder(View itemView) {
             super(itemView);
         }
     }
@@ -34,7 +34,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public RecyclerAdapter(List<String> authorList, List<String> reviewList){
+    public RecyclerAdapter(List<String> authorList, List<String> reviewList) {
         // Initialize ArrayLists with arguments passed in to RecyclerAdapter
         mAuthors = authorList;
         mReviews = reviewList;
@@ -43,7 +43,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view;
-        if (i == EMPTY_VIEW){
+        if (i == EMPTY_VIEW) {
             view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.empty_view, viewGroup, false);
             EmptyViewHolder emptyHolder = new EmptyViewHolder(view);
             return emptyHolder;
@@ -58,7 +58,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder reviewHolder, int i) {
-        if (reviewHolder instanceof ReviewHolder){
+        if (reviewHolder instanceof ReviewHolder) {
             // Set Author and Review text of appropriate Author/Review from ArrayList if
             // the reviewholder parameter is an instance of ReviewHolder (and not EmptyHolder)
             ((ReviewHolder) reviewHolder).authorView.setText(mAuthors.get(i));
@@ -70,7 +70,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemViewType(int position) {
         // If our ArrayList of authors is 0, return EMPTY_VIEW and inflate our Empty View layout
-        if (mAuthors.size() == 0){
+        if (mAuthors.size() == 0) {
             return EMPTY_VIEW;
         }
         return super.getItemViewType(position);

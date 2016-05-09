@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by Brendan on 5/5/2016.
  */
-public class FavoriteFragment extends Fragment{
+public class FavoriteFragment extends Fragment {
 
     private final String PATH_API_KEY = "api_key";
     private static final String API_KEY = BuildConfig.API_KEY;
@@ -80,6 +80,7 @@ public class FavoriteFragment extends Fragment{
                 Movie movie = dbToMovieObject(movieToConvert);
                 openDetails.putExtra("MOVIE", movie);
 
+                // If our callback to MainActivity returns false, launch intent to open DetailActivity (1 pane)
                 if (!((Callback) getActivity()).onFavoriteSelected(movie, position)) {
                     startActivity(openDetails);
                 }

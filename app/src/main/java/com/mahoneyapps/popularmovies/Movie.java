@@ -16,7 +16,7 @@ public class Movie implements Parcelable {
     long mId;
 
     // constructor with data from the movie database api
-    public Movie(String title, String releaseDate, String urlPoster, String synopsis, String backDropUrl, double voteAverage, long id){
+    public Movie(String title, String releaseDate, String urlPoster, String synopsis, String backDropUrl, double voteAverage, long id) {
         this.mTitle = title;
         this.mReleaseDate = releaseDate;
         this.mUrlPoster = urlPoster;
@@ -27,7 +27,7 @@ public class Movie implements Parcelable {
     }
 
     // our constructor with the parcelable as an argument
-    public Movie(Parcel parcel){
+    public Movie(Parcel parcel) {
         this.mTitle = parcel.readString();
         this.mReleaseDate = parcel.readString();
         this.mUrlPoster = parcel.readString();
@@ -38,64 +38,64 @@ public class Movie implements Parcelable {
     }
 
 
-    public Movie(){
+    public Movie() {
 
     }
 
     // getters and setters
-    private String getTitle(){
+    private String getTitle() {
         return mTitle;
     }
 
-    private void setTitle(String title){
+    private void setTitle(String title) {
         this.mTitle = title;
     }
 
-    private String getReleaseDate(){
+    private String getReleaseDate() {
         return mReleaseDate;
     }
 
-    private void setReleaseDate(String releaseDate){
+    private void setReleaseDate(String releaseDate) {
         this.mReleaseDate = releaseDate;
     }
 
-    private String getPosterUrl(){
+    private String getPosterUrl() {
         return mUrlPoster;
     }
 
-    private void setPosterUrl(String url){
+    private void setPosterUrl(String url) {
         this.mUrlPoster = url;
     }
 
-    private String getSynopsis(){
+    private String getSynopsis() {
         return mSynopsis;
     }
 
-    private void setSynopsis(String synopsis){
+    private void setSynopsis(String synopsis) {
         this.mSynopsis = synopsis;
     }
 
-    private String getBackDropUrl(){
+    private String getBackDropUrl() {
         return mBackDropUrl;
     }
 
-    private void setBackDropUrl(String backDropUrl){
+    private void setBackDropUrl(String backDropUrl) {
         this.mBackDropUrl = backDropUrl;
     }
 
-    private double getVoteAverage(){
+    private double getVoteAverage() {
         return mVoteAverage;
     }
 
-    private void setVoteAverage(double voteAverage){
+    private void setVoteAverage(double voteAverage) {
         this.mVoteAverage = voteAverage;
     }
 
-    private long getId(){
+    private long getId() {
         return mId;
     }
 
-    private void setId(long id){
+    private void setId(long id) {
         this.mId = id;
     }
 

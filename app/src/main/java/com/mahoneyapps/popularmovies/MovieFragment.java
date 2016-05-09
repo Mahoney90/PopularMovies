@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,6 @@ public class MovieFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate our GridView
         View rootView = inflater.inflate(R.layout.grid_layout, container, false);
-        Log.d("create moviefrag", "moviefrag");
 
         Bundle bundle = getArguments();
         PATH_TO_USE = bundle.getString(getString(R.string.sort_preference_key));
@@ -68,15 +66,13 @@ public class MovieFragment extends Fragment {
         if (PATH_TO_USE != null) {
             if (PATH_TO_USE.equals("top_rated")) {
                 if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-                    ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Highest Rated Movies");
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Highest Rated Movies");
                 }
-            } else if(PATH_TO_USE.equals("favorite")){
+            } else if (PATH_TO_USE.equals("favorite")) {
                 if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-                    ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Favorite Movies");
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Favorite Movies");
                 }
-            }
-
-            else {
+            } else {
                 if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
                     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Most Popular Movies");
                 }
@@ -95,7 +91,7 @@ public class MovieFragment extends Fragment {
         mPopMovies = new ArrayList<>();
 
         // Show a toast to the user is they aren't connected to the internet
-        if (!checkNetworkAvailability()){
+        if (!checkNetworkAvailability()) {
             Toast.makeText(getActivity(), TOAST_TEXT_NO_NETWORK, Toast.LENGTH_SHORT).show();
             return null;
         }
@@ -107,12 +103,11 @@ public class MovieFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent openDetails = new Intent(getActivity(), DetailActivity.class);
                 Movie movie = mPopMovies.get(position);
-                Log.d("before callback", "before");
-                if (!((Callback) getActivity()).onItemSelected(movie, position)){
+                // If our MainActivity Callback is false, launch DetailActivity intent (1 pane)
+                if (!((Callback) getActivity()).onItemSelected(movie, position)) {
                     openDetails.putExtra(INTENT_EXTRA_MOVIE_KEY, movie);
                     startActivity(openDetails);
                 }
-                Log.d("after callback", "after");
 
             }
         });
@@ -123,7 +118,7 @@ public class MovieFragment extends Fragment {
         return rootView;
     }
 
-    class FetchMovieTitles extends AsyncTask<Void, Void, List<String>>{
+    class FetchMovieTitles extends AsyncTask<Void, Void, List<String>> {
 
         // Variables for URI Builder
         private final String BASE_URL = "api.themoviedb.org";
@@ -142,7 +137,6 @@ public class MovieFragment extends Fragment {
             String movieJSONString = null;
 
             try {
-
                 // URL for Most Popular Movies API service
                 Uri.Builder uri = new Uri.Builder();
                 uri.scheme("http").
@@ -187,18 +181,16 @@ public class MovieFragment extends Fragment {
                 // Convert the data we read from the input stream to a String
                 movieJSONString = buffer.toString();
 
-            } catch (IOException i){
+            } catch (IOException i) {
                 i.printStackTrace();
-            }
-
-            finally {
+            } finally {
                 // If we had previously established a URL connection, disconnect now
-                if (urlConnection != null){
+                if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
 
                 // Also close our BufferedReader
-                if (reader != null){
+                if (reader != null) {
                     try {
                         reader.close();
                     } catch (IOException e) {
@@ -211,7 +203,7 @@ public class MovieFragment extends Fragment {
             // Pass JSON String to getMovieDataFromJSON method and return the result, a List<String>
             try {
                 return getMovieDataFromJSON(movieJSONString);
-            } catch (JSONException e){
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             return null;
@@ -219,16 +211,15 @@ public class MovieFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<String> urls) {
-            Log.d("on post", "on post");
             // If our List<String> of URLs passed from doInBackground isn't null, add the List to
             // our custom adapter and reset the Adapter on the GridView so it updates with our Movie URL data
-            if (urls != null){
+            if (urls != null) {
                 MoviePosterAdapter moviePosterAdapter = new MoviePosterAdapter(getActivity(), urls);
                 mGridView.setAdapter(moviePosterAdapter);
             }
         }
 
-        private List<String> getMovieDataFromJSON(String movieJSONString) throws JSONException{
+        private List<String> getMovieDataFromJSON(String movieJSONString) throws JSONException {
 
             // Initialize constants to query TMDB API
             final String RESULTS = "results";
@@ -249,7 +240,7 @@ public class MovieFragment extends Fragment {
             Movie[] movieResultsStr = new Movie[16];
 
             // Loop through the results array to return the first 16 movies
-            for (int i = 0; i < movieResultsStr.length; i++){
+            for (int i = 0; i < movieResultsStr.length; i++) {
                 JSONObject movieObject = resultsArray.getJSONObject(i);
                 String posterPath = movieObject.getString(POSTER_PATH);
 
@@ -314,7 +305,7 @@ public class MovieFragment extends Fragment {
     private boolean checkNetworkAvailability() {
         ConnectivityManager cManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cManager.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()){
+        if (networkInfo != null && networkInfo.isConnected()) {
             return true;
         } else {
             return false;

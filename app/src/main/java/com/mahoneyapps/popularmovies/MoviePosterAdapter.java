@@ -20,7 +20,7 @@ public class MoviePosterAdapter extends ArrayAdapter {
     List<String> mUrls;
     Context mContext;
 
-    public MoviePosterAdapter(Activity context, List<String> urls){
+    public MoviePosterAdapter(Activity context, List<String> urls) {
         // Pass 0 as middle argument, don't need a resource layout
         super(context, 0, urls);
 
@@ -48,15 +48,15 @@ public class MoviePosterAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         // If a view hasn't been used yet, inflate our list item view to be used and recycled
-        if (convertView == null){
+        if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_movie_poster, parent, false);
         }
 
         ImageView posterIcon = (ImageView) convertView.findViewById(R.id.poster);
 
         // As long as there are URLs passed in our list, use Picasso to load the URLs into our ImageView
-        if (mUrls.size() > 0){
-                Picasso.with(mContext).load(mUrls.get(position)).into(posterIcon);
+        if (mUrls.size() > 0) {
+            Picasso.with(mContext).load(mUrls.get(position)).into(posterIcon);
         }
 
         return posterIcon;

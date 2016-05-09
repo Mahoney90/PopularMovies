@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,28 +73,18 @@ public class DetailFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.movie_details, container, false);
 
-        Log.d("create detailfrag", "detailfrag");
-
         ButterKnife.bind(this, view);
 
         new dbInitializer();
-//        FavoriteMovies f1 = new FavoriteMovies();
-//        List<String> f2 = f1.allFavorites();
-//        Log.d("size b4 delete", String.valueOf(f2));
-//        f1.deleteDBResults();
-//        List<String> f3 = f1.allFavorites();
-//        Log.d("size b4 delete", String.valueOf(f3));
 
         // retrieve parcelable from fragment class, containing Movie object with data
         Bundle args = getArguments();
         Intent i = getActivity().getIntent();
         if (args != null) {
-            Log.d("have parcelable", "HAVE");
             // If args isn't null, attempt to get movie parcelable
             Movie movie = (Movie) args.getParcelable("MOVIE");
             fillInMovieData(movie, view);
-        } else if (i != null){
-            Log.d("have intent", "HAVE INTENT");
+        } else if (i != null) {
             // If movie is null, then we get our parcelable from DetailActivity intent
             Movie movie = i.getParcelableExtra("MOVIE");
             fillInMovieData(movie, view);
@@ -108,8 +97,6 @@ public class DetailFragment extends Fragment {
 
         // If movie isn't null, fill in DetailsFragment with movie details
         if (movie != null) {
-            Log.d("not null test", "in df");
-
             // initialize our member variables with previously set variables from our parcelable Movie objects
             mTitle = movie.mTitle;
             mReleaseDate = movie.mReleaseDate;
@@ -201,8 +188,8 @@ public class DetailFragment extends Fragment {
 
         // if the Movie passed is a favorite,
         FavoriteMovies favs = new FavoriteMovies();
-        if (favs.isFavorite(mId)){
-            if (mUrl != null){
+        if (favs.isFavorite(mId)) {
+            if (mUrl != null) {
                 favoriteMovieList.add(mUrl);
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = preferences.edit();
@@ -294,7 +281,7 @@ public class DetailFragment extends Fragment {
                     int numberResults = reviewObject.getInt(TOTAL_REVIEW_RESULTS);
 
                     JSONArray resultsArray = reviewObject.getJSONArray(RESULTS_ARRAY);
-                    for (int i = 0; i < numberResults; i++){
+                    for (int i = 0; i < numberResults; i++) {
                         JSONObject resultsObject = resultsArray.getJSONObject(i);
                         String reviewAuthor = resultsObject.getString(AUTHOR);
                         String reviewMessage = resultsObject.getString(CONTENT);
@@ -349,7 +336,7 @@ public class DetailFragment extends Fragment {
     }
 
 
-    public void watchVideo(){
+    public void watchVideo() {
         // Launch intent to load trailer in youtube
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String trailerPath = preferences.getString("trailer_key", "default");

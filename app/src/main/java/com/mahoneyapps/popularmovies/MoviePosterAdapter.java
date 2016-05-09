@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class MoviePosterAdapter extends ArrayAdapter {
 
-    List<ImageView> mMovieList;
     List<String> mUrls;
     Context mContext;
 

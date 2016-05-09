@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,15 +45,24 @@ public class MovieFragment extends Fragment {
     private static final String API_KEY = BuildConfig.API_KEY;
     private String PATH_TO_USE = "popular";
     private final String TOAST_TEXT_NO_NETWORK = "Please connect to the Internet";
+    private final String PATH_API_KEY = "api_key";
+
+    public interface Callback {
+        boolean onItemSelected(Movie movie, int position);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate our GridView
         View rootView = inflater.inflate(R.layout.grid_layout, container, false);
-
+        Log.d("create moviefrag", "moviefrag");
 
         Bundle bundle = getArguments();
         PATH_TO_USE = bundle.getString(getString(R.string.sort_preference_key));
+
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        PATH_TO_USE = "popular";
 
         // Check that getSupportActionBar doesn't return null, and then change the Activity's Title
         if (PATH_TO_USE != null) {
@@ -60,7 +70,13 @@ public class MovieFragment extends Fragment {
                 if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
                     ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Highest Rated Movies");
                 }
-            } else {
+            } else if(PATH_TO_USE.equals("favorite")){
+                if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+                    ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Favorite Movies");
+                }
+            }
+
+            else {
                 if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
                     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Most Popular Movies");
                 }
@@ -78,6 +94,7 @@ public class MovieFragment extends Fragment {
         // Initialize ArrayList of Movie objects
         mPopMovies = new ArrayList<>();
 
+        // Show a toast to the user is they aren't connected to the internet
         if (!checkNetworkAvailability()){
             Toast.makeText(getActivity(), TOAST_TEXT_NO_NETWORK, Toast.LENGTH_SHORT).show();
             return null;
@@ -90,8 +107,13 @@ public class MovieFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent openDetails = new Intent(getActivity(), DetailActivity.class);
                 Movie movie = mPopMovies.get(position);
-                openDetails.putExtra(INTENT_EXTRA_MOVIE_KEY, movie);
-                startActivity(openDetails);
+                Log.d("before callback", "before");
+                if (!((Callback) getActivity()).onItemSelected(movie, position)){
+                    openDetails.putExtra(INTENT_EXTRA_MOVIE_KEY, movie);
+                    startActivity(openDetails);
+                }
+                Log.d("after callback", "after");
+
             }
         });
 
@@ -108,7 +130,7 @@ public class MovieFragment extends Fragment {
         private final String PATH_VERSION = "3";
         private final String PATH_MOVIE = "movie";
         private final String PATH_POPULAR = "popular";
-        private final String PATH_API_KEY = "api_key";
+
 
         @Override
         protected List<String> doInBackground(Void... params) {
@@ -197,6 +219,7 @@ public class MovieFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<String> urls) {
+            Log.d("on post", "on post");
             // If our List<String> of URLs passed from doInBackground isn't null, add the List to
             // our custom adapter and reset the Adapter on the GridView so it updates with our Movie URL data
             if (urls != null){
@@ -215,6 +238,7 @@ public class MovieFragment extends Fragment {
             final String VOTE_AVERAGE = "vote_average";
             final String PLOT_SYNOPSIS = "overview";
             final String BACKDROP_URL = "backdrop_path";
+            final String ID = "id";
             String url = "";
 
             // Parse our JSON by initially getting a JSONObject, and then looking for the results array
@@ -253,6 +277,7 @@ public class MovieFragment extends Fragment {
                 String movieSynopsis = movieObject.getString(PLOT_SYNOPSIS);
                 String movieBackDrop = movieObject.getString(BACKDROP_URL);
                 double movieVoteAverage = movieObject.getDouble(VOTE_AVERAGE);
+                long movieId = movieObject.getLong(ID);
 
                 // Using URI Builder to build URL string for Movie backdrop picture, increasing size to w342
                 Uri.Builder uriBackDrop = new Uri.Builder();
@@ -267,7 +292,10 @@ public class MovieFragment extends Fragment {
                 String backDropURL = uriBackDrop.toString();
 
                 // Create new Movie object, passing in all pertinent data retrieved from JSON parsing
-                Movie movie = new Movie(movieTitle, movieReleaseDate, url, movieSynopsis, backDropURL, movieVoteAverage);
+                Movie movie = new Movie(movieTitle, movieReleaseDate, url, movieSynopsis, backDropURL, movieVoteAverage, movieId);
+                Movies movieDouble = new Movies(movieTitle, movieReleaseDate, url, movieSynopsis, backDropURL, movieVoteAverage, movieId);
+                movieDouble.save();
+
 
                 // Add a copy of that Movie object to the proper position in our array
                 movieResultsStr[i] = movie;

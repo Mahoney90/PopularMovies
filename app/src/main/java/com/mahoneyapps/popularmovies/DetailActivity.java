@@ -2,10 +2,12 @@ package com.mahoneyapps.popularmovies;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.Button;
 
-import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Brendan on 4/28/2016.
@@ -18,40 +20,30 @@ public class DetailActivity extends AppCompatActivity {
     private String mUrl;
     private String mBackDropUrl;
     private double mVoteAverage;
+    private long mId;
+    private final String KEY_FOR_TRAILER_INTENT = "trailer_key";
+    private final String PATH_API_KEY = "api_key";
+    private static final String API_KEY = BuildConfig.API_KEY;
+    private List<String> mAuthorList = new ArrayList<>();
+    private List<String> mReviewList = new ArrayList<>();
+    RecyclerView recyclerView;
+    RecyclerAdapter mAdapter;
+    Button trailerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.movie_details);
+        setContentView(R.layout.detail_activity);
 
+        // Display up button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // initialize views to populate with data retrieved from movie database API
-        TextView titleText = (TextView) findViewById(R.id.movie_title);
-        TextView releaseDateText = (TextView) findViewById(R.id.movie_release_date);
-        TextView synopsisText = (TextView) findViewById(R.id.synopsis);
-        TextView ratingText = (TextView) findViewById(R.id.voter_rating);
-        ImageView backDropImage = (ImageView) findViewById(R.id.backdrop_image);
-
-        // retrieve parcelable from fragment class, containing Movie object with data
-        Movie movie = (Movie) getIntent().getParcelableExtra("MOVIE");
-
-        // initialize our member variables with previously set variables from our parcelable Movie objects
-        mTitle = movie.mTitle;
-        mReleaseDate = movie.mReleaseDate;
-        mUrl = movie.mUrlPoster;
-        mSynopsis = movie.mSynopsis;
-        mBackDropUrl = movie.mBackDropUrl;
-        mVoteAverage = movie.mVoteAverage;
-
-        // set texts on our views, populating with data from the user selected movie
-        titleText.setText(mTitle);
-        releaseDateText.setText("Release date: " + mReleaseDate);
-        synopsisText.setText(mSynopsis);
-        ratingText.setText(mVoteAverage + "/10");
-
-        // using backdrop image for the DetailActivity
-        Picasso.with(this).load(mBackDropUrl).into(backDropImage);
+        if (savedInstanceState == null) {
+            Log.d("detail activity", "da");
+            // Start new DetailFragment is savedInstanceState is null
+            DetailFragment detailFragment = new DetailFragment();
+            getFragmentManager().beginTransaction().add(R.id.detail_container, detailFragment, "DETAIL").commit();
+        }
 
     }
 }

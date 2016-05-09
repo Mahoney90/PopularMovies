@@ -10,4 +10,6 @@
     <string name="top_movies">Top Movies</string>
     <string name="most_popular">Most Popular</string>
     <string name="sort_preference_key">Preference Key</string>
+    <string name="favorite_movies">Favorite Movies</string>
+    <string name="saved">Saved</string>
 </resources>

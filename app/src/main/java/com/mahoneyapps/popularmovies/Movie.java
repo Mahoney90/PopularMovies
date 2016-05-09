@@ -13,15 +13,17 @@ public class Movie implements Parcelable {
     String mSynopsis;
     String mBackDropUrl;
     double mVoteAverage;
+    long mId;
 
     // constructor with data from the movie database api
-    public Movie(String title, String releaseDate, String urlPoster, String synopsis, String backDropUrl, double voteAverage){
+    public Movie(String title, String releaseDate, String urlPoster, String synopsis, String backDropUrl, double voteAverage, long id){
         this.mTitle = title;
         this.mReleaseDate = releaseDate;
         this.mUrlPoster = urlPoster;
         this.mSynopsis = synopsis;
         this.mBackDropUrl = backDropUrl;
         this.mVoteAverage = voteAverage;
+        this.mId = id;
     }
 
     // our constructor with the parcelable as an argument
@@ -32,6 +34,7 @@ public class Movie implements Parcelable {
         this.mSynopsis = parcel.readString();
         this.mBackDropUrl = parcel.readString();
         this.mVoteAverage = parcel.readDouble();
+        this.mId = parcel.readLong();
     }
 
 
@@ -88,6 +91,14 @@ public class Movie implements Parcelable {
         this.mVoteAverage = voteAverage;
     }
 
+    private long getId(){
+        return mId;
+    }
+
+    private void setId(long id){
+        this.mId = id;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -102,6 +113,7 @@ public class Movie implements Parcelable {
         dest.writeString(mSynopsis);
         dest.writeString(mBackDropUrl);
         dest.writeDouble(mVoteAverage);
+        dest.writeLong(mId);
     }
 
     // generates instances of parcelable class from a parcel
@@ -116,4 +128,5 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
 }

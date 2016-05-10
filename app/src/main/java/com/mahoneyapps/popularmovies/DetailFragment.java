@@ -75,8 +75,6 @@ public class DetailFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        new dbInitializer();
-
         // retrieve parcelable from fragment class, containing Movie object with data
         Bundle args = getArguments();
         Intent i = getActivity().getIntent();

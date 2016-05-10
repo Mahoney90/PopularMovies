@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        new dbInitializer();
+
         if (findViewById(R.id.detail_container) != null) {
             Log.d("is 2 pane", "2 pane");
             mTwoPane = true;

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ public class MovieFragment extends Fragment {
     private String PATH_TO_USE = "popular";
     private final String TOAST_TEXT_NO_NETWORK = "Please connect to the Internet";
     private final String PATH_API_KEY = "api_key";
+    int position = 0;
 
     public interface Callback {
         boolean onItemSelected(Movie movie, int position);
@@ -80,6 +82,7 @@ public class MovieFragment extends Fragment {
         }
 
         // Initialize ArrayList and our GridView
+
         mMovieList = new ArrayList<>();
         mGridView = (GridView) rootView.findViewById(R.id.movies_grid);
 
@@ -89,6 +92,12 @@ public class MovieFragment extends Fragment {
 
         // Initialize ArrayList of Movie objects
         mPopMovies = new ArrayList<>();
+
+        if (savedInstanceState != null){
+            position = savedInstanceState.getInt("POSITION");
+            Log.d("pos", String.valueOf(position));
+            mGridView.setSelection(position);
+        }
 
         // Show a toast to the user is they aren't connected to the internet
         if (!checkNetworkAvailability()) {
@@ -116,6 +125,15 @@ public class MovieFragment extends Fragment {
         new FetchMovieTitles().execute();
 
         return rootView;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        position = mGridView.getFirstVisiblePosition();
+        Log.d("onSIS", String.valueOf(position));
+        outState.putInt("POSITION", position);
     }
 
     class FetchMovieTitles extends AsyncTask<Void, Void, List<String>> {
@@ -217,6 +235,7 @@ public class MovieFragment extends Fragment {
                 MoviePosterAdapter moviePosterAdapter = new MoviePosterAdapter(getActivity(), urls);
                 mGridView.setAdapter(moviePosterAdapter);
             }
+            mGridView.setSelection(position);
         }
 
         private List<String> getMovieDataFromJSON(String movieJSONString) throws JSONException {

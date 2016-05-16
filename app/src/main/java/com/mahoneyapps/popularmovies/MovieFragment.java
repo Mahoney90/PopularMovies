@@ -40,7 +40,7 @@ public class MovieFragment extends Fragment {
     MoviePosterAdapter mAdapter;
     List<String> mMovieList;
     String[] mUrls = new String[16];
-    List<Movie> mPopMovies;
+    ArrayList<Movie> mPopMovies;
     final String INTENT_EXTRA_MOVIE_KEY = "MOVIE";
     private static final String API_KEY = BuildConfig.API_KEY;
     private String PATH_TO_USE = "popular";
@@ -97,12 +97,14 @@ public class MovieFragment extends Fragment {
             position = savedInstanceState.getInt("POSITION");
             Log.d("pos", String.valueOf(position));
             mGridView.setSelection(position);
+            mPopMovies = savedInstanceState.getParcelableArrayList("THEMOVIELIST");
+            Log.d("size movies sis", String.valueOf(mPopMovies.size()));
         }
 
         // Show a toast to the user is they aren't connected to the internet
         if (!checkNetworkAvailability()) {
             Toast.makeText(getActivity(), TOAST_TEXT_NO_NETWORK, Toast.LENGTH_SHORT).show();
-            return null;
+//            return null;
         }
 
         // Set an Item Click Listener on our GridView, when we click on an item, start an intent,
@@ -117,7 +119,6 @@ public class MovieFragment extends Fragment {
                     openDetails.putExtra(INTENT_EXTRA_MOVIE_KEY, movie);
                     startActivity(openDetails);
                 }
-
             }
         });
 
@@ -134,6 +135,7 @@ public class MovieFragment extends Fragment {
         position = mGridView.getFirstVisiblePosition();
         Log.d("onSIS", String.valueOf(position));
         outState.putInt("POSITION", position);
+        outState.putParcelableArrayList("THEMOVIELIST", mPopMovies);
     }
 
     class FetchMovieTitles extends AsyncTask<Void, Void, List<String>> {

@@ -321,13 +321,17 @@ public class DetailFragment extends Fragment {
         setAuthors.addAll(setReviews);
 
         // Commit list of Authors and Reviews to SharedPreferences
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putStringSet(AUTHOR_LIST_KEY, setAuthors).apply();
+        if (isAdded()){
+            // Simple check to see if the Fragment has been added to the Activity, so that our getActivity
+            // call doesn't return null
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putStringSet(AUTHOR_LIST_KEY, setAuthors).apply();
 
-        SharedPreferences preferences2 = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor2 = preferences2.edit();
-        editor2.putStringSet(REVIEW_LIST_KEY, setReviews).apply();
+            SharedPreferences preferences2 = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences.Editor editor2 = preferences2.edit();
+            editor2.putStringSet(REVIEW_LIST_KEY, setReviews).apply();
+        }
 
         // Notify adapter that lists of Authors and Reviews have changed
         mAdapter.notifyDataSetChanged();

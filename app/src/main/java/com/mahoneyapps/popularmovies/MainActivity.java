@@ -49,12 +49,6 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        MovieFragment movieFragment = (MovieFragment) getFragmentManager().findFragmentById(R.id.movie_fragment);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);

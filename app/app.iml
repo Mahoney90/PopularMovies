@@ -106,8 +106,8 @@
     <orderEntry type="library" exported="" name="sugar-1.5" level="project" />
     <orderEntry type="library" exported="" name="support-v4-24.0.0-alpha1" level="project" />
     <orderEntry type="library" exported="" name="butterknife-annotations-8.0.1" level="project" />
-    <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-24.0.0-alpha1" level="project" />
+    <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="volley-1.0.0" level="project" />
   </component>
 </module>

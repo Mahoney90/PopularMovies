@@ -1,6 +1,7 @@
 package com.mahoneyapps.popularmovies;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -66,6 +67,7 @@ public class DetailFragment extends Fragment {
     private final String POSTER_URL_KEY_FOR_FAVORITES = "poster_url";
     List<String> favoriteMovieList;
     MoviePosterAdapter favoriteAdapter;
+    Context mContext;
 
     @Nullable
     @Override
@@ -89,6 +91,13 @@ public class DetailFragment extends Fragment {
         }
 
         return view;
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 
     private void fillInMovieData(Movie movie, final View view) {

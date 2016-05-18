@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,19 +47,35 @@ public class MoviePosterAdapter extends ArrayAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
 
         // If a view hasn't been used yet, inflate our list item view to be used and recycled
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_movie_poster, parent, false);
+            holder = new ViewHolder();
+            holder.imageView = (ImageView) convertView.findViewById(R.id.poster);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        ImageView posterIcon = (ImageView) convertView.findViewById(R.id.poster);
+//        ImageView posterIcon = (ImageView) convertView.findViewById(R.id.poster);
 
         // As long as there are URLs passed in our list, use Picasso to load the URLs into our ImageView
         if (mUrls.size() > 0) {
-            Picasso.with(mContext).load(mUrls.get(position)).into(posterIcon);
+            Picasso.with(mContext).load(mUrls.get(position)).into(holder.imageView);
         }
 
-        return posterIcon;
+        return convertView;
+    }
+
+    public static class ViewHolder{
+        public ImageView imageView;
+
+    }
+
+    public void updateMovies(ArrayList<String> movieUrls){
+        mUrls = movieUrls;
+        notifyDataSetChanged();
     }
 }

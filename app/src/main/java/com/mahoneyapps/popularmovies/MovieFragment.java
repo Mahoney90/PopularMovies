@@ -136,6 +136,20 @@ public class MovieFragment extends Fragment {
         Log.d("onSIS", String.valueOf(position));
         outState.putInt("POSITION", position);
         outState.putParcelableArrayList("THEMOVIELIST", mPopMovies);
+        mAdapter.updateMovies(getUrlPathFromMovie(mPopMovies));
+    }
+
+    private ArrayList<String> getUrlPathFromMovie(ArrayList<Movie> movieList){
+        ArrayList<String> urlList = new ArrayList<>();
+        String url;
+        if (movieList != null && movieList.size() > 0){
+            for (Movie movie : movieList){
+                url = movie.mUrlPoster;
+                Log.d("movie url", url);
+                urlList.add(url);
+            }
+        }
+        return urlList;
     }
 
     class FetchMovieTitles extends AsyncTask<Void, Void, List<String>> {
@@ -254,6 +268,8 @@ public class MovieFragment extends Fragment {
             String url = "";
 
             // Parse our JSON by initially getting a JSONObject, and then looking for the results array
+            if (movieJSONString != null){
+
             JSONObject object = new JSONObject(movieJSONString);
             JSONArray resultsArray = object.getJSONArray(RESULTS);
 
@@ -314,6 +330,7 @@ public class MovieFragment extends Fragment {
 
                 // Add movie to our List<Movie> mPopMovies, used for our DetailActivity page
                 mPopMovies.add(movie);
+            }
             }
 
             // pass string array or poster path URLs to an ArrayList, which is passed through to onPostExecute

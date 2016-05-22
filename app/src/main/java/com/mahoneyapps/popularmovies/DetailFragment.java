@@ -140,7 +140,7 @@ public class DetailFragment extends Fragment {
                         fav.unfavorite(mId);
                     } else {
                         mStarFavorite.setImageResource(R.drawable.star);
-                        Toast.makeText(getActivity(), R.string.saved, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, R.string.saved, Toast.LENGTH_SHORT).show();
                         FavoriteMovies fav = new FavoriteMovies();
                         fav.makeFavorite(mId, mUrl);
                     }
@@ -150,7 +150,7 @@ public class DetailFragment extends Fragment {
             // Set layoutmanager on recycylerview and RecyclerAdapter as adapter on recyclerview,
             // passing list of Authors and Reviews to adapter
             RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-            llm = new LinearLayoutManager(getActivity());
+            llm = new LinearLayoutManager(mContext);
             recyclerView.setLayoutManager(llm);
             mAdapter = new RecyclerAdapter(mAuthorList, mReviewList);
             recyclerView.setAdapter(mAdapter);
@@ -169,7 +169,7 @@ public class DetailFragment extends Fragment {
             ratingText.setText(mVoteAverage + "/10");
 
             // using backdrop image for the DetailActivity
-            Picasso.with(getActivity()).load(mBackDropUrl).into(backDropImage);
+            Picasso.with(mContext).load(mBackDropUrl).into(backDropImage);
 
             // Show reviews and change text to "Hide Reviews"
             mShowReview = (Button) view.findViewById(R.id.show_reviews);
@@ -198,7 +198,7 @@ public class DetailFragment extends Fragment {
         if (favs.isFavorite(mId)) {
             if (mUrl != null) {
                 favoriteMovieList.add(mUrl);
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString(POSTER_URL_KEY_FOR_FAVORITES, mUrl);
                 editor.apply();
@@ -262,7 +262,7 @@ public class DetailFragment extends Fragment {
                     String trailerPath = firstTrailerObject.getString("source");
 
                     // Put trailer path into Shared Preferences
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(KEY_FOR_TRAILER_INTENT, trailerPath).apply();
 
@@ -309,8 +309,8 @@ public class DetailFragment extends Fragment {
             }
         });
 
-        Volley.newRequestQueue(getActivity()).add(jsonreviewRequest);
-        Volley.newRequestQueue(getActivity()).add(jsonRequest);
+        Volley.newRequestQueue(mContext).add(jsonreviewRequest);
+        Volley.newRequestQueue(mContext).add(jsonRequest);
 
     }
 
@@ -333,11 +333,11 @@ public class DetailFragment extends Fragment {
         if (isAdded()){
             // Simple check to see if the Fragment has been added to the Activity, so that our getActivity
             // call doesn't return null
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putStringSet(AUTHOR_LIST_KEY, setAuthors).apply();
 
-            SharedPreferences preferences2 = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences preferences2 = PreferenceManager.getDefaultSharedPreferences(mContext);
             SharedPreferences.Editor editor2 = preferences2.edit();
             editor2.putStringSet(REVIEW_LIST_KEY, setReviews).apply();
         }
@@ -349,11 +349,13 @@ public class DetailFragment extends Fragment {
 
     public void watchVideo() {
         // Launch intent to load trailer in youtube
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         String trailerPath = preferences.getString("trailer_key", "default");
         String youtube = "http://www.youtube.com/watch?v=";
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtube + trailerPath));
-        startActivity(intent);
+        if (intent.resolveActivity(mContext.getPackageManager()) != null){
+            startActivity(intent);
+        }
     }
 
 }

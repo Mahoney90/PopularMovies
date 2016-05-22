@@ -93,13 +93,13 @@ public class MovieFragment extends Fragment {
         // Initialize ArrayList of Movie objects
         mPopMovies = new ArrayList<>();
 
-        if (savedInstanceState != null){
-            position = savedInstanceState.getInt("POSITION");
-            Log.d("pos", String.valueOf(position));
-            mGridView.setSelection(position);
-            mPopMovies = savedInstanceState.getParcelableArrayList("THEMOVIELIST");
-            Log.d("size movies sis", String.valueOf(mPopMovies.size()));
-        }
+//        if (savedInstanceState != null){
+//            position = savedInstanceState.getInt("POSITION");
+//            Log.d("pos", String.valueOf(position));
+//            mGridView.setSelection(position);
+//            mPopMovies = savedInstanceState.getParcelableArrayList("THEMOVIELIST");
+//            Log.d("size movies sis", String.valueOf(mPopMovies.size()));
+//        }
 
         // Show a toast to the user is they aren't connected to the internet
         if (!checkNetworkAvailability()) {
@@ -128,16 +128,38 @@ public class MovieFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            position = savedInstanceState.getInt("POSITION");
+            Log.d("pos", String.valueOf(position));
+            mGridView.setSelection(position);
+            mPopMovies = savedInstanceState.getParcelableArrayList("THEMOVIELIST");
+            Log.d("size movies sis", String.valueOf(mPopMovies.size()));
+        }
+    }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        position = mGridView.getFirstVisiblePosition();
-        Log.d("onSIS", String.valueOf(position));
-        outState.putInt("POSITION", position);
-        outState.putParcelableArrayList("THEMOVIELIST", mPopMovies);
-        mAdapter.updateMovies(getUrlPathFromMovie(mPopMovies));
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+            position = mGridView.getFirstVisiblePosition();
+            Log.d("onSIS", String.valueOf(position));
+            savedInstanceState.putInt("POSITION", position);
+            savedInstanceState.putParcelableArrayList("THEMOVIELIST", mPopMovies);
+            mAdapter.updateMovies(getUrlPathFromMovie(mPopMovies));
+
+            super.onSaveInstanceState(savedInstanceState);
     }
+//
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        position = mGridView.getFirstVisiblePosition();
+//        Log.d("onSIS", String.valueOf(position));
+//        outState.putInt("POSITION", position);
+//        outState.putParcelableArrayList("THEMOVIELIST", mPopMovies);
+//        mAdapter.updateMovies(getUrlPathFromMovie(mPopMovies));
+//    }
 
     private ArrayList<String> getUrlPathFromMovie(ArrayList<Movie> movieList){
         ArrayList<String> urlList = new ArrayList<>();
@@ -248,8 +270,8 @@ public class MovieFragment extends Fragment {
             // If our List<String> of URLs passed from doInBackground isn't null, add the List to
             // our custom adapter and reset the Adapter on the GridView so it updates with our Movie URL data
             if (urls != null) {
-                MoviePosterAdapter moviePosterAdapter = new MoviePosterAdapter(getActivity(), urls);
-                mGridView.setAdapter(moviePosterAdapter);
+                mAdapter = new MoviePosterAdapter(getActivity(), urls);
+                mGridView.setAdapter(mAdapter);
             }
             mGridView.setSelection(position);
         }
